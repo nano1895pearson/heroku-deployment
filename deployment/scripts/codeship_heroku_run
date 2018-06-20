@@ -2,4 +2,4 @@
 ARGS=${@:1:$#-1}
 APP_NAME=${@: -1}
 
-heroku run --exit-code --app ${APP_NAME} -- ${ARGS}
+HEROKU_API_KEY=${CODESHIP_HEROKU_API_KEY} heroku run --exit-code --app ${APP_NAME} -- ${ARGS}

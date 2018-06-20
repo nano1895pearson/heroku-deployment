@@ -65,7 +65,7 @@ function check_url {
   return ${status}
 }
 
-while getopts "N:K:f:u:d:ch" opt; do
+while getopts "N:K:R:B:f:u:d:ch" opt; do
   case "$opt" in
     N)
       CODESHIP_HEROKU_APP_NAME="$OPTARG"; ;;
