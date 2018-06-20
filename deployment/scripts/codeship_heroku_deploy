@@ -21,6 +21,8 @@ codeship_heroku_deploy Usage:
 required:
 -N or CODESHIP_HEROKU_APP_NAME: heroku app name
 -K or CODESHIP_HEROKU_API_KEY: heroku API key
+-R : Github Repo URL
+-B : Github Branch
 
 optional:
 -f or CODESHIP_HEROKU_DEPLOY_FOLDER: folder to deploy
@@ -69,6 +71,10 @@ while getopts "N:K:f:u:d:ch" opt; do
       CODESHIP_HEROKU_APP_NAME="$OPTARG"; ;;
     K)
       CODESHIP_HEROKU_API_KEY="$OPTARG"; ;;
+    R)
+      GITHUB_REPO_URL="$OPTARG"; ;;
+    B)
+      GITHUB_DEPLOY_BRANCH="$OPTARG"; ;;
     f)
       CODESHIP_HEROKU_DEPLOY_FOLDER="$OPTARG"; ;;
     d)
