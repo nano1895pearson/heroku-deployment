@@ -100,19 +100,14 @@ fi
 
 trap 'echo error executing "$BASH_COMMAND" in line $LINENO' ERR
 
-if [ "${CODESHIP_HEROKU_DEPLOY_FOLDER}" != "${PWD}" ]; then
-  echo "Changing directory to ${CODESHIP_HEROKU_DEPLOY_FOLDER}"
-  cd "${CODESHIP_HEROKU_DEPLOY_FOLDER}"
-fi
-
-
 if ! HEROKU_API_KEY=$CODESHIP_HEROKU_API_KEY "${SCRIPT_DIRECTORY}/codeship_heroku_check_access" "${CODESHIP_HEROKU_APP_NAME}"; then
   echo "could not access heroku app ${CODESHIP_HEROKU_APP_NAME}, exiting" >&2
   exit 1
 fi
 
-#--include-vcs-ignore set for compatibility with Ubuntu 14.04: https://github.com/heroku/heroku-builds/issues/36
-HEROKU_API_KEY=${CODESHIP_HEROKU_API_KEY} heroku builds:create --include-vcs-ignore -a "${CODESHIP_HEROKU_APP_NAME}" --version "${CI_COMMIT_ID}"
+# download tar file of branch to deploy since `heroku builds:create` cannot access private urls
+curl -sL https://github.com/YourAcclaim/acclaim-server/archive/stable.tar.gz -u ${GITHUB_ACCESS_TOKEN}:x-oauth-basic -o deploy.tar.gz
+HEROKU_API_KEY=${CODESHIP_HEROKU_API_KEY} heroku builds:create --source-tar deploy.tar.gz -a "${CODESHIP_HEROKU_APP_NAME}" --version "${CI_COMMIT_ID}"
 
 if [ "${CODESHIP_HEROKU_POST_DEPLOY_COMMAND}" != "" ]; then
   HEROKU_API_KEY=$CODESHIP_HEROKU_API_KEY "${SCRIPT_DIRECTORY}/codeship_heroku_run" "${CODESHIP_HEROKU_POST_DEPLOY_COMMAND}" "${CODESHIP_HEROKU_APP_NAME}"
