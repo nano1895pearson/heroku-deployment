@@ -106,7 +106,7 @@ if ! HEROKU_API_KEY=$CODESHIP_HEROKU_API_KEY "${SCRIPT_DIRECTORY}/codeship_herok
 fi
 
 # download tar file of branch to deploy since `heroku builds:create` cannot access private urls
-curl -sL https://github.com/YourAcclaim/acclaim-server/archive/stable.tar.gz -u ${GITHUB_ACCESS_TOKEN}:x-oauth-basic -o deploy.tar.gz
+curl -sL ${GITHUB_REPO_URL}/archive/#{GITHUB_DEPLOY_BRANCH}.tar.gz -u ${GITHUB_ACCESS_TOKEN}:x-oauth-basic -o deploy.tar.gz
 HEROKU_API_KEY=${CODESHIP_HEROKU_API_KEY} heroku builds:create --source-tar deploy.tar.gz -a "${CODESHIP_HEROKU_APP_NAME}" --version "${CI_COMMIT_ID}"
 
 if [ "${CODESHIP_HEROKU_POST_DEPLOY_COMMAND}" != "" ]; then
